@@ -1,5 +1,6 @@
 package evo.logic;
 
+import evo.mathf.Mathf;
 import evo.mathf.Vec2;
 
 import java.util.ArrayList;
@@ -19,18 +20,28 @@ public class World {
 
     // World LOGIC
     public int width, height;
-    public ArrayList<Cell> cells = new ArrayList<>();
 
     private World(int width, int height){
         this.width = width;
         this.height = height;
-        for(int i = 0; i < 100; i++) {
-            cells.add(new Cell(Math.random() * width, Math.random() * height, Math.random() * 2 - 1, Math.random() * 2 - 1, (int) (Math.random() * 5 + 5)));
+        for (int i = 0; i < 100; i++) {
+            CircleObj obj = new CircleObj(
+                    new Vec2(Math.random() * width, Math.random() * height),
+                    Vec2.zero,
+                    Math.random() * 6 + 6,
+                    10
+            );
+            obj.setMass(obj.radius * obj.radius * obj.radius / 144);
+            obj.ApplyImpulse(new Vec2(1, 0).rotated(Math.random() * Math.PI * 2).mul(obj.mass * 4));
+            PhysicsSolver.AddObject(obj);
         }
+        PhysicsSolver.UpdateObjectsList();
     }
 
     public void step(){
-        for (int id = 0; id < cells.size(); id++) cells.get(id).step(id);
-        for (Cell cell : cells) cell.recalc();
+        for (int i = 0; i < PhysicsSolver.CALC_STEPS; i++) {
+            PhysicsSolver.ApplyGravity();
+            PhysicsSolver.PhysicStep();
+        }
     }
 }

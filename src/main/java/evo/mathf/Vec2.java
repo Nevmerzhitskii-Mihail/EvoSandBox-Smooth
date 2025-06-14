@@ -3,7 +3,7 @@ package evo.mathf;
 import evo.Main;
 
 public class Vec2 {
-    double x, y;
+    public double x, y;
 
     public static Vec2 zero = new Vec2(0);
 
@@ -16,44 +16,40 @@ public class Vec2 {
         this.y = y;
     }
 
-    public double getX(){
-        return x;
+    public Vec2 add(Vec2 other){
+        return new Vec2(other.x + x, other.y + y);
     }
 
-    public double getY(){
-        return y;
+    public Vec2 sub(Vec2 other){
+        return new Vec2(x - other.x, y - other.y);
+    }
+
+    public Vec2 mul(double coef){
+        return new Vec2(x * coef, y * coef);
+    }
+
+    public double dot(Vec2 other){
+        return x * other.x + y * other.y;
     }
 
     public double length(){
-        return Math.sqrt(dot(this, this));
+        return Math.sqrt(x * x + y * y);
     }
 
-    public static Vec2 add(Vec2 a, Vec2 b){
-        return new Vec2(a.x + b.x, a.y + b.y);
+    public Vec2 normalized(){
+        return this.mul(1 / length());
     }
 
-    public static Vec2 sub(Vec2 a, Vec2 b){
-        return new Vec2(Mathf.getDeltaX(a.x, b.x), Mathf.getDeltaY(a.y, b.y));
+    public double projLength(Vec2 normal){
+        return dot(normal.normalized());
     }
 
-    public static Vec2 mul(Vec2 a, double c){
-        return new Vec2(a.x * c, a.y * c);
+    public Vec2 proj(Vec2 normal){
+        normal = normal.normalized();
+        return normal.mul(dot(normal));
     }
 
-    public static Vec2 div(Vec2 a, double c){
-        return new Vec2(a.x / c, a.y / c);
-    }
-
-    public static double dot(Vec2 a, Vec2 b){
-        return a.x * b.x + a.y * b.y;
-    }
-
-    public static Vec2 normalized(Vec2 a){
-        if (a.length() == 0) return zero;
-        return div(a, a.length());
-    }
-
-    public static Vec2 reduce(Vec2 a){
-        return new Vec2(Mathf.mod(a.x, Main.screen_width), Mathf.mod(a.y, Main.screen_height));
+    public Vec2 rotated(double angle){
+        return new Vec2(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle));
     }
 }

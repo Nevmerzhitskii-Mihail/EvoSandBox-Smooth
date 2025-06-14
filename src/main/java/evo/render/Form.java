@@ -1,7 +1,7 @@
 package evo.render;
 
-import evo.logic.Cell;
-import evo.logic.World;
+import evo.logic.CircleObj;
+import evo.logic.PhysicsSolver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class Form extends JFrame {
         container.add(canvas, BorderLayout.CENTER);
 
         pack();
-        setSize(width + 10, height + 20);
+        setSize(width + 15, height + 50);
         setTitle("EvoSandBox-Smooth v0.0.1_test");
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -38,9 +38,14 @@ public class Form extends JFrame {
 
         buf.setColor(Color.lightGray);
         buf.fillRect(0, 0, width, height);
-        for (Cell cell : World.INSTANCE.cells){
-            buf.setColor(cell.color);
-            buf.fillOval((int)cell.pos.getX() - cell.radius, (int)cell.pos.getY() - cell.radius, 2 * cell.radius, 2 * cell.radius);
+        for (CircleObj obj : PhysicsSolver.objects){
+            buf.setColor(Color.magenta);
+            int x0 = (int)(obj.position.x - obj.radius);
+            int y0 = (int)(obj.position.y - obj.radius);
+            int size = (int)(2 * obj.radius);
+            buf.fillOval(x0, y0, size, size);
+            buf.setColor(Color.black);
+            buf.drawOval(x0, y0, size, size);
 //            buf.setColor(Color.red);
 //            buf.drawLine((int) cell.pos.getX(), (int) cell.pos.getY(), (int)(cell.pos.getX() + cell.vel.getX() * 100), (int)(cell.pos.getY() + cell.vel.getY() * 100));
         }
